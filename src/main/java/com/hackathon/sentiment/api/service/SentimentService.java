@@ -10,6 +10,11 @@ public class SentimentService {
     private final static List<String> negativeWords = List.of("ruim", "péssimo", "horrível", "terrível", "lamentável", "negativo", "insatisfatório", "desagradável");
 
     public static SentimentResponse analyze(String text) {
+
+
+        TextValidationService validationService = new TextValidationService(); 
+        validationService.validate(text);
+
         if(positiveWords.stream().anyMatch(text::contains)) {
             return new SentimentResponse(
                 text,
