@@ -38,9 +38,9 @@ def predict_with_features(text: str, top_n: int = 3):
 
     # pegar as palavras mais influentes do texto
     top_idx = np.argsort(np.abs(contributions))[-top_n:]
-    top_features = feature_names[top_idx].tolist()
+    palavras_chave = feature_names[top_idx].tolist()
 
-    return label, float(prob), top_features
+    return label, float(prob), palavras_chave
 
 
 @app.post("/predict")
@@ -52,10 +52,10 @@ def predict_sentiment(input: TextInput):
             detail="Texto deve ter pelo menos 5 caracteres"
         )
 
-    previsao, probabilidade, top_features = predict_with_features(input.text)
+    previsao, probabilidade, palavras_chave = predict_with_features(input.text)
 
     return {
         "previsao": previsao.capitalize(),
         "probabilidade": round(probabilidade, 2),
-        "top_features": top_features
+        "palavras_chave": palavras_chave
     }

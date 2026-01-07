@@ -7,3 +7,8 @@ services:
       POSTGRES_PASSWORD: sentiment-api-pass
     ports:
       - "5432:5432"
+  microservice-python:
+    build: ./data-science
+    container_name: python-app
+    ports:
+      - "3000:3000"

@@ -16,16 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class SentimentController {
 
     @Autowired
-    private SentimentService sentimentService; // Injetei o serviço para poder salvar no banco
+    private SentimentService sentimentService;
 
     @PostMapping
     public ResponseEntity<SentimentResponse> analyzeSentiment(@RequestBody SentimentRequest request, UriComponentsBuilder uriBuilder) {
         var textValue = request.text();
 
-        // Agora chamei o método da instância (sem o 'static')
         SentimentResponse result = sentimentService.analyze(textValue);
 
-        // Criei a URI de retorno. Como o ID é UUID automático, simplificamos o caminho
         var uri = uriBuilder.path("/sentiment").build().toUri();
 
         return ResponseEntity.created(uri).body(result);
