@@ -1,14 +1,45 @@
 services:
-  sentiment-api:
+  sentiment-api-db:
     image: postgres:16-alpine
-    container_name: sentiment-api
+    container_name: sentiment-api-db
     environment:
       POSTGRES_DB: sentiment-api-db
       POSTGRES_PASSWORD: sentiment-api-pass
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
   microservice-python:
     build: ./data-science
     container_name: python-app
     ports:
       - "3000:3000"
+    networks:
+      - backend
+
+  sentiment-api:
+    build: .
+    container_name: sentiment-api
+    ports:
+      - "8081:8081"
+    depends_on:
+      - sentiment-api-db
+      - microservice-python
+    restart: on-failure
+    environment:
+      # --- CORREÇÃO DE PORTA E CONTEXTO ---
+      # Força o Java a ouvir na 8081 interna (alinhando com o ports acima)
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sentiment-api-db:5432/sentiment-api-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: sentiment-api-pass
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      PYTHON_SERVICE_URL: http://python-app:3000/predict
+    networks:
+      - backend
+networks:
+  backend:
+    driver: "bridge"
