@@ -78,7 +78,8 @@ Desenvolvido como um **MVP de hackathon**, o sistema integra um modelo de **Data
 ---
 
 ## Arquitetura do Projeto
----
+
+```
 SentimentAnalysisAPI/
 ├── src/
 │   ├── main/
@@ -126,6 +127,7 @@ SentimentAnalysisAPI/
     └── requirements.txt
 ```
 
+---
 ---
 
 ## Rodando Localmente
