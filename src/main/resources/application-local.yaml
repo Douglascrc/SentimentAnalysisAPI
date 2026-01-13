@@ -1,7 +1,6 @@
 server:
   port: 8081
-  servlet:
-    context-path: /api/v1
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sentiment-api-db
@@ -9,7 +8,6 @@ spring:
     password: sentiment-api-pass
     driver-class-name: org.postgresql.Driver
 
-  # ACRESCENTEI ESTA PARTE ABAIXO:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

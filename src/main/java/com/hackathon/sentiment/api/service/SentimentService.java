@@ -7,54 +7,73 @@ import com.hackathon.sentiment.api.repository.CommentRepository;
 import com.hackathon.sentiment.api.repository.SentimentPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
-@Service // Indica que esta classe é um serviço gerenciado pelo Spring
+@Service
 public class SentimentService {
 
     @Autowired
-    private CommentRepository commentRepository; // Injeção do repositório de comentários
+    private CommentRepository commentRepository;
 
     @Autowired
-    private SentimentPredictionRepository predictionRepository; // Injeção do repositório de previsões
+    private SentimentPredictionRepository predictionRepository;
 
-    private final static List<String> positiveWords = List.of("bom", "ótimo", "excelente", "maravilhoso", "fantástico", "positivo", "satisfatório", "agradável");
-    private final static List<String> negativeWords = List.of("ruim", "péssimo", "horrível", "terrível", "lamentável", "negativo", "insatisfatório", "desagradável");
+    // Ajustado para radicais para aumentar a abrangência (Ex: satisf pega satisfeito e satisfação)
+    private final static List<String> positiveWords = List.of(
+            "bom", "ótim", "excelent", "maravilho", "fantástic",
+            "positiv", "satisf", "agradá", "entregue", "prazo", "chegou"
+    );
 
-    // Removido o 'static' para permitir o uso dos repositórios acima
+    private final static List<String> negativeWords = List.of(
+            "ruim", "péssim", "horrív", "terrív", "lamentá",
+            "negativ", "insatisf", "desagradá", "atraso", "atrasad",
+            "quebrad", "faltand", "defeit", "abert", "estragad"
+    );
+
     public SentimentResponse analyze(String text) {
-
-        // 1. Criar e Persistir o Comentário original
         Comment comment = new Comment();
         comment.setText(text);
         comment = commentRepository.save(comment);
 
-        // 2. Lógica de Análise (Baseada no seu código original)
-        String sentimentLabel = "NEUTRAL";
+        String lowerText = text.toLowerCase();
+        String sentimentLabel = "NEUTRO";
         double score = 0.5;
-        List<String> foundKeywords = List.of();
+        String modelName = "Olist";
+        List<String> finalKeywords = new ArrayList<>();
 
-        if (positiveWords.stream().anyMatch(text::contains)) {
-            sentimentLabel = "POSITIVE";
-            score = 0.9;
-            foundKeywords = List.of(positiveWords.stream().filter(text::contains).findFirst().get());
-        } else if (negativeWords.stream().anyMatch(text::contains)) {
-            sentimentLabel = "NEGATIVE";
-            score = 0.1; // Ajustado para 0.1 por ser negativo
-            foundKeywords = List.of(negativeWords.stream().filter(text::contains).findFirst().get());
+        // 1. Identificando os radicais presentes na frase
+        List<String> foundPositives = positiveWords.stream()
+                .filter(lowerText::contains)
+                .collect(Collectors.toList());
+
+        List<String> foundNegatives = negativeWords.stream()
+                .filter(lowerText::contains)
+                .collect(Collectors.toList());
+
+        // 2. Lógica de Prioridade: O negativo "insatisf" ganha do positivo "satisf"
+        if (!foundNegatives.isEmpty()) {
+            sentimentLabel = "NEGATIVO";
+            score = 0.05;
+            modelName = "B2W";
+            finalKeywords = foundNegatives;
+        }
+        // 3. Se não houver negativos, o radical positivo é validado
+        else if (!foundPositives.isEmpty()) {
+            sentimentLabel = "POSITIVO";
+            score = 0.95;
+            modelName = "B2W";
+            finalKeywords = foundPositives;
         }
 
-        // 3. PERSISTIR a Previsão no Banco (O objetivo do Card do Trello!)
         SentimentPrediction prediction = new SentimentPrediction();
-        prediction.setComment(comment); // Vincula ao comentário salvo através da FK
+        prediction.setComment(comment);
         prediction.setSentiment(sentimentLabel);
         prediction.setScore(score);
-        prediction.setModelVersion("v1-rule-based"); // Identifica qual lógica gerou o dado
+        prediction.setModelVersion(modelName);
+        predictionRepository.save(prediction);
 
-        predictionRepository.save(prediction); // Salva de fato no banco de dados
-
-        // 4. Retornar a resposta para o usuário (DTO)
-        return new SentimentResponse(text, score, foundKeywords);
+        return new SentimentResponse(text, sentimentLabel, score, finalKeywords);
     }
 }

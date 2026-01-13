@@ -14,7 +14,7 @@ public class StatsResponseDTO {
     private String statusApi = "DOWN";
 
     // Estatísticas de Negócio (Virá das tabelas de Sentiment)
-    // Usamos 0L para Long e 0.0 para Double para evitar o "null" no JSON
+    // Usei 0L para Long e 0.0 para Double para evitar o "null" no JSON
     private Long totalAnalises = 0L;
     private Double percentualPositivo = 0.0;
     private Double percentualNegativo = 0.0;
