@@ -7,6 +7,7 @@ import com.hackathon.sentiment.api.repository.CommentRepository;
 import com.hackathon.sentiment.api.repository.SentimentPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
@@ -52,20 +53,21 @@ public class SentimentService {
                 .filter(lowerText::contains)
                 .collect(Collectors.toList());
 
-        // 2. Lógica de Prioridade: O negativo "insatisf" ganha do positivo "satisf"
+        // 2. Lógica de Prioridade (Roteamento B2W): O negativo "insatisf" ganha do positivo "satisf"
         if (!foundNegatives.isEmpty()) {
             sentimentLabel = "NEGATIVO";
             score = 0.05;
             modelName = "B2W";
             finalKeywords = foundNegatives;
         }
-        // 3. Se não houver negativos, o radical positivo é validado
+        // 3. Se não houver negativos, o radical positivo é validado (Roteamento B2W)
         else if (!foundPositives.isEmpty()) {
             sentimentLabel = "POSITIVO";
             score = 0.95;
             modelName = "B2W";
             finalKeywords = foundPositives;
         }
+        // 4. Caso contrário, permanece como NEUTRO pelo modelo Olist
 
         SentimentPrediction prediction = new SentimentPrediction();
         prediction.setComment(comment);

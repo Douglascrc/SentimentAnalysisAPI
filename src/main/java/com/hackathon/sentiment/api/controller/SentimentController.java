@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller responsável por receber as requisições de análise de sentimento.
- * A anotação @CrossOrigin com "*" permite que o Frontend em qualquer porta (5173 ou 5174)
+ * A anotação @CrossOrigin com "*" permite que o Frontend em qualquer porta
  * consiga ler a resposta da IA.
  */
 @CrossOrigin(origins = "*")
@@ -22,7 +22,7 @@ public class SentimentController {
 
     /**
      * Endpoint POST que recebe o texto e devolve a predição.
-     * Alterado para retornar ResponseEntity.ok para maior compatibilidade com o Dashboard.
+     * Retorna ResponseEntity.ok (200) para total compatibilidade com o Dashboard React.
      */
     @PostMapping
     public ResponseEntity<SentimentResponse> analyzeSentiment(@RequestBody SentimentRequest request) {
