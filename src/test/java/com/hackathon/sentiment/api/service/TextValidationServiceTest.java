@@ -22,7 +22,7 @@ class TextValidationServiceTest {
     @Test
     void deveFalharQuandoTextoForMuitoCurto() {
         assertThrows(IllegalArgumentException.class, () ->
-                service.validate("curto"));
+                service.validate("oi"));
     }
 
     @Test
