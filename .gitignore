@@ -32,3 +32,16 @@ build/
 
 ### VS Code ###
 .vscode/
+# Python
+__pycache__/
+*.pyc
+
+# Frontend build
+src/main/resources/static/assets/
+
+# Java
+target/
+
+# Node
+node_modules/
+dist/
