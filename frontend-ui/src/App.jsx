@@ -17,7 +17,7 @@ const App = () => {
   // Ajustado para bater exatamente no @RequestMapping("/stats") do seu StatsController
   const fetchStats = async () => {
     try {
-      const response = await fetch('/stats');
+      const response = await fetch('http://localhost:8081/stats');
       if (response.ok) {
         const data = await response.json();
         setApiData(data);
@@ -38,7 +38,7 @@ const App = () => {
     setLoading(true);
     try {
       // Ajustado para bater exatamente no @RequestMapping("/sentiment") do seu SentimentController
-      const response = await fetch('/sentiment', {
+      const response = await fetch('http://localhost:8081/sentiment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: comment })
@@ -160,16 +160,16 @@ const App = () => {
             </button>
 
             {result && (
-              <div className={`mt-6 p-4 rounded-xl border-2 transition-all ${getSentimentBg(result.sentiment)}`}>
+              <div className={`mt-6 p-4 rounded-xl border-2 transition-all ${getSentimentBg(result.previsao)}`}>
                 <div className="flex items-center gap-2 mb-1">
-                  <ShieldCheck size={18} className={getSentimentColor(result.sentiment)} />
+                  <ShieldCheck size={18} className={getSentimentColor(result.previsao)} />
                   <span className="font-bold text-sm text-slate-700">Resultado:</span>
                 </div>
-                <p className={`text-xl font-black uppercase ${getSentimentColor(result.sentiment)}`}>
-                  {result.sentiment}
+                <p className={`text-xl font-black uppercase ${getSentimentColor(result.previsao)}`}>
+                  {result.previsao}
                 </p>
                 <p className="text-[10px] mt-1 opacity-70 font-medium text-slate-500">
-                  Confiança: {(Number(result.score) * 100).toFixed(2)}%
+                  Confiança: {(Number(result.probabilidade) * 100).toFixed(2)}%
                 </p>
               </div>
             )}
