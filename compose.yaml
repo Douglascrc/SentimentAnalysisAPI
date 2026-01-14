@@ -1,14 +1,36 @@
 services:
-  sentiment-api:
+  sentiment-api-db:
     image: postgres:16-alpine
-    container_name: sentiment-api
+    container_name: sentiment-api-db
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_DB: sentiment-api-db
       POSTGRES_PASSWORD: sentiment-api-pass
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
   microservice-python:
     build: ./data-science
     container_name: python-app
     ports:
       - "3000:3000"
+    networks:
+      - backend
+
+  sentiment-api:
+    build: .
+    container_name: sentiment-api
+    ports:
+      - "8081:8081"
+    env_file:
+      - ".env"
+    depends_on:
+      - sentiment-api-db
+      - microservice-python
+    networks:
+      - backend
+networks:
+  backend:
+    driver: "bridge"

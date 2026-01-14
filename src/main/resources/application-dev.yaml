@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    defer-datasource-initialization: true
+  datasource:
+    url: jdbc:postgresql://sentiment-api-db:5432/sentiment-api-db
+    username: postgres
+    password: sentiment-api-pass
+
+python:
+  service:
+    url: http://microservice-python:3000/predict
+server:
+  error:
+    include-stacktrace: always
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    com.hackathon: DEBUG
+    org.springframework.web: DEBUG

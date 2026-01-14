@@ -2,6 +2,8 @@ package com.hackathon.sentiment.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,20 +13,20 @@ import java.util.UUID;
 public class SentimentPrediction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    // Aqui está a ligação (Foreign Key) do diagrama
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    private String sentiment; // Ex: "Positivo"
+    private String sentiment;
 
-    private Double score; // O valor numérico da predição
+    private Double score;
 
     @Column(name = "model_version")
-    private String modelVersion; // Versão do modelo usado no Colab
+    private String modelVersion;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
