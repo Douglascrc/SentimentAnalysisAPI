@@ -3,17 +3,19 @@ from pydantic import BaseModel
 import joblib
 import numpy as np
 
-# carregar pipeline treinado
-model = joblib.load("models/sentiment_pipeline (1).joblib")
-
+models = {
+    "pt": joblib.load("models/sentiment_pt.joblib"),
+    "en": joblib.load("models/sentiment_en.joblib"),
+    "es": joblib.load("models/sentiment_es.joblib"),
+}
 app = FastAPI()
 
 class TextInput(BaseModel):
     text: str
+    language: str  
 
 
-def predict_with_features(text: str, top_n: int = 3):
-    # probabilidades
+def predict_with_features(model, text: str, top_n: int = 3):
     probs = model.predict_proba([text])[0]
 
     prob_negativo = probs[0]
@@ -36,12 +38,10 @@ def predict_with_features(text: str, top_n: int = 3):
     text_tfidf = vectorizer.transform([text]).toarray()[0]
     contributions = text_tfidf * coef
 
-    # pegar as palavras mais influentes do texto
     top_idx = np.argsort(np.abs(contributions))[-top_n:]
-    palavras_chave = feature_names[top_idx].tolist()
+    top_features = feature_names[top_idx].tolist()
 
-    return label, float(prob), palavras_chave
-
+    return label, float(prob), top_features
 
 @app.post("/predict")
 def predict_sentiment(input: TextInput):
@@ -52,10 +52,24 @@ def predict_sentiment(input: TextInput):
             detail="Texto deve ter pelo menos 5 caracteres"
         )
 
-    previsao, probabilidade, palavras_chave = predict_with_features(input.text)
+    lang = input.language.lower()
+
+    if lang not in models:
+        raise HTTPException(
+            status_code=400,
+            detail="Idioma não suportado. Use: pt, en ou es"
+        )
+
+    model = models[lang]
+
+    previsao, probabilidade, top_features = predict_with_features(
+        model,
+        input.text
+    )
 
     return {
         "previsao": previsao.capitalize(),
         "probabilidade": round(probabilidade, 2),
-        "palavras_chave": palavras_chave
+        "idioma": lang,
+        "top_features": top_features
     }
