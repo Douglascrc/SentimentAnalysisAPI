@@ -2,6 +2,8 @@ package com.hackathon.sentiment.api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,7 +13,8 @@ import java.util.UUID;
 public class RequestLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     private String endpoint; // Qual URL foi chamada
@@ -19,10 +22,10 @@ public class RequestLog {
     private String method; // GET, POST, etc
 
     @Column(name = "status_code")
-    private Integer statusCode; // Ex: 200, 404
+    private Integer statusCode;
 
     @Column(name = "request_time_ms")
-    private Integer requestTimeMs; // Tempo de resposta
+    private Integer requestTimeMs;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
