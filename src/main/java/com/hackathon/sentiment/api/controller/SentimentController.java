@@ -1,8 +1,9 @@
 package com.hackathon.sentiment.api.controller;
 
+import com.hackathon.sentiment.api.domain.service.SentimentService;
 import com.hackathon.sentiment.api.dto.SentimentRequest;
 import com.hackathon.sentiment.api.dto.SentimentResponse;
-import com.hackathon.sentiment.api.service.SentimentService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

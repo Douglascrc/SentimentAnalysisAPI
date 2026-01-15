@@ -1,6 +1,6 @@
-package com.hackathon.sentiment.api.repository;
+package com.hackathon.sentiment.api.domain.repository;
 
-import com.hackathon.sentiment.api.entity.RequestLog;
+import com.hackathon.sentiment.api.domain.entity.RequestLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

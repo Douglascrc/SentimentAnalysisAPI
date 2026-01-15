@@ -1,4 +1,4 @@
-package com.hackathon.sentiment.api.service;
+package com.hackathon.sentiment.api.domain.service;
 
 public class TextValidationService {
 

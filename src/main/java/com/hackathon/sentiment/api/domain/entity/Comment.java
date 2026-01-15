@@ -1,4 +1,4 @@
-package com.hackathon.sentiment.api.entity;
+package com.hackathon.sentiment.api.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,5 +21,5 @@ public class Comment {
     private String text;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now(); // Data de criação
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

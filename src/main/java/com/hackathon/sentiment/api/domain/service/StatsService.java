@@ -1,10 +1,10 @@
-package com.hackathon.sentiment.api.service;
+package com.hackathon.sentiment.api.domain.service;
 
 import com.hackathon.sentiment.api.dto.StatsResponseDTO;
-import com.hackathon.sentiment.api.repository.SentimentPredictionRepository;
-import com.hackathon.sentiment.api.repository.RequestLogRepository;
+import com.hackathon.sentiment.api.domain.repository.RequestLogRepository;
+import com.hackathon.sentiment.api.domain.repository.SentimentPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.HealthEndpoint; // Sensor de saúde
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.stereotype.Service;
 

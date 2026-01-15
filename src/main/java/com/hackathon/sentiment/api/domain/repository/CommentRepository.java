@@ -1,6 +1,6 @@
-package com.hackathon.sentiment.api.repository;
+package com.hackathon.sentiment.api.domain.repository;
 
-import com.hackathon.sentiment.api.entity.Comment;
+import com.hackathon.sentiment.api.domain.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 

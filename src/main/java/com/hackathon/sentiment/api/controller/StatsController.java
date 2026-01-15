@@ -1,7 +1,7 @@
 package com.hackathon.sentiment.api.controller;
 
+import com.hackathon.sentiment.api.domain.service.StatsService;
 import com.hackathon.sentiment.api.dto.StatsResponseDTO;
-import com.hackathon.sentiment.api.service.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.Status;
@@ -23,10 +23,9 @@ public class StatsController {
 
     @GetMapping
     public StatsResponseDTO getStats() {
-        // Busca os dados processados no Service (Positivos/Negativos) [cite: 11]
+
         StatsResponseDTO stats = statsService.obterEstatisticas();
 
-        // Extrai o status de saúde do Actuator (UP/DOWN) [cite: 5, 24]
         Status healthStatus = healthEndpoint.health().getStatus();
         stats.setStatusApi(healthStatus.getCode());
 

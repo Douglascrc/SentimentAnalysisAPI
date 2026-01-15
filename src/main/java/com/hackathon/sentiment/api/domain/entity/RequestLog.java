@@ -1,4 +1,4 @@
-package com.hackathon.sentiment.api.entity;
+package com.hackathon.sentiment.api.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,27 +8,24 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "sentiment_prediction") //
+@Table(name = "request_log")
 @Data
-public class SentimentPrediction {
+public class RequestLog {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    private String endpoint;
 
-    private String sentiment;
+    private String method;
 
-    private Double score;
+    @Column(name = "status_code")
+    private Integer statusCode;
 
-    @Column(name = "model_version")
-    private String modelVersion;
-
-    private String language;
+    @Column(name = "request_time_ms")
+    private Integer requestTimeMs;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

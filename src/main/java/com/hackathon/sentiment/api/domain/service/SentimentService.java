@@ -1,11 +1,11 @@
-package com.hackathon.sentiment.api.service;
+package com.hackathon.sentiment.api.domain.service;
 
 import com.hackathon.sentiment.api.dto.SentimentRequest;
 import com.hackathon.sentiment.api.dto.SentimentResponse;
-import com.hackathon.sentiment.api.entity.Comment;
-import com.hackathon.sentiment.api.entity.SentimentPrediction;
-import com.hackathon.sentiment.api.repository.CommentRepository;
-import com.hackathon.sentiment.api.repository.SentimentPredictionRepository;
+import com.hackathon.sentiment.api.domain.entity.Comment;
+import com.hackathon.sentiment.api.domain.entity.SentimentPrediction;
+import com.hackathon.sentiment.api.domain.repository.CommentRepository;
+import com.hackathon.sentiment.api.domain.repository.SentimentPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
