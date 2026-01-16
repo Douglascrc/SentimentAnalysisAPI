@@ -242,6 +242,33 @@ const App = () => {
             >
               {loading ? 'Analisando...' : 'Analisar Texto'}
             </button>
+            {result && (
+                <div className={`mt-6 p-4 rounded-xl border animate-in fade-in slide-in-from-top-2 duration-300 ${
+                    result.previsao === 'Positivo'
+                        ? 'bg-green-50 border-green-200 text-green-900'
+                        : 'bg-red-50 border-red-200 text-red-900'
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-xl">{result.previsao}</span>
+                    <span className="text-sm font-medium bg-white/60 px-3 py-1 rounded shadow-sm">
+                        {(result.probabilidade * 100).toFixed(1)}% de confiança
+                    </span>
+                  </div>
+
+                  {result.palavras_chave && result.palavras_chave.length > 0 && (
+                      <div className="mt-4 pt-3 border-t border-black/5">
+                        <p className="text-xs opacity-70 mb-2 uppercase font-bold tracking-wider">Palavras-chave</p>
+                        <div className="flex flex-wrap gap-2">
+                          {result.palavras_chave.map((word, i) => (
+                              <span key={i} className="bg-white/80 px-2.5 py-1 rounded-md text-xs font-semibold shadow-sm text-slate-700">
+                                {word}
+                              </span>
+                          ))}
+                        </div>
+                      </div>
+                  )}
+                </div>
+            )}
           </div>
 
           {/* ===================== HISTÓRICO ===================== */}
