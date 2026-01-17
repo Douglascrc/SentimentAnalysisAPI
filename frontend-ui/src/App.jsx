@@ -57,9 +57,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Aquecimento inicial - acorda o backend imediatamente
+    // Aquecimento inicial - acorda o backend E o Python ML
     fetchStats();
     fetchHistory();
+    
+    // Acorda o Python ML (serviço de análise)
+    fetch(`${API_URL}/health/warmup`).catch(() => {});
     
     const interval = setInterval(fetchStats, 5000);
     return () => clearInterval(interval);
