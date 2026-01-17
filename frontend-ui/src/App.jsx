@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 
 const App = () => {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+  
   const [comment, setComment] = useState('');
   const [language, setLanguage] = useState('pt');
   const [loading, setLoading] = useState(false);
@@ -41,7 +43,7 @@ const App = () => {
   /* ===================== STATS ===================== */
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:8081/stats');
+      const response = await fetch(`${API_URL}/stats`);
       if (response.ok) {
         const data = await response.json();
         setApiData(data);
@@ -61,7 +63,7 @@ const App = () => {
     if (!comment.trim()) return;
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8081/sentiment', {
+      const response = await fetch(`${API_URL}/sentiment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: comment, language })
@@ -100,7 +102,7 @@ const App = () => {
       params.append('limit', filter.recent);
       console.log("Buscando histórico com params:", params.toString());
 
-      const response = await fetch(`http://localhost:8081/comments?${params.toString()}`);
+      const response = await fetch(`${API_URL}/comments?${params.toString()}`);
 
       if (response.ok) {
         const data = await response.json();
