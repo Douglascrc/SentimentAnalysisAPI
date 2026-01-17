@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:5173") // Libera o acesso para o React
+@CrossOrigin(origins = "*") // Permite acesso de qualquer origem
 @RestController
-@RequestMapping("/stats") // Ajustado para bater com o relatório técnico
+@RequestMapping("/stats")
 public class StatsController {
 
     @Autowired

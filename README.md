@@ -496,6 +496,25 @@ Seguimos o padrão [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
+## Deploy
+
+### Aplicação Online
+
+Acesse a aplicação funcionando em produção:
+
+**[https://sentiment-analysis-frontend-gamma.vercel.app](https://sentiment-analysis-frontend-gamma.vercel.app)**
+
+<details>
+<summary>Endpoints da API</summary>
+
+- **Backend (Java)**: `https://sentimentanalysisapi-backend.onrender.com`
+- **Data Science (Python)**: `https://sentimentanalysisapi-data.onrender.com`
+
+
+</details>
+
+---
+
 ## Autores
 - **Douglas Campos** – [GitHub](https://github.com/douglascamposcr) |  [LinkedIn](https://www.linkedin.com/in/douglasbuscampos)
 - **Ezequiel Elisel** – [GitHub](https://github.com/EzequielFarias144) |  [LinkedIn](https://www.linkedin.com/in/ezequiel-farias-5a6b813a2)

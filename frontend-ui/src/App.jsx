@@ -47,16 +47,22 @@ const App = () => {
       if (response.ok) {
         const data = await response.json();
         setApiData(data);
+      } else {
+        setApiData(prev => ({ ...prev, statusApi: 'Offline' }));
       }
     } catch (error) {
       console.error("API Offline");
+      setApiData(prev => ({ ...prev, statusApi: 'Offline' }));
     }
   };
 
   useEffect(() => {
-    // Aquecimento inicial - acorda o backend imediatamente
+    // Aquecimento inicial - acorda o backend E o Python ML
     fetchStats();
     fetchHistory();
+    
+    // Acorda o Python ML (serviço de análise)
+    fetch(`${API_URL}/health/warmup`).catch(() => {});
     
     const interval = setInterval(fetchStats, 5000);
     return () => clearInterval(interval);
