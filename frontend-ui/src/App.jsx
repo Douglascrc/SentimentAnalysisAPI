@@ -54,7 +54,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    // Aquecimento inicial - acorda o backend imediatamente
     fetchStats();
+    fetchHistory();
+    
     const interval = setInterval(fetchStats, 5000);
     return () => clearInterval(interval);
   }, []);
