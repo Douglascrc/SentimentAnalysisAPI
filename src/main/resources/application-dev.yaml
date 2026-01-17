@@ -1,6 +1,6 @@
 spring:
   jpa:
-    show-sql: true
+    show-sql: ${SHOW_SQL:true}
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -8,13 +8,14 @@ spring:
     generate-ddl: true
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:postgresql://sentiment-api-db:5432/sentiment-api-db
-    username: postgres
-    password: sentiment-api-pass
+    url: ${DATABASE_URL:jdbc:postgresql://sentiment-api-db:5432/sentiment-api-db}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:sentiment-api-pass}
+    driver-class-name: org.postgresql.Driver
 
 python:
   service:
-    url: http://microservice-python:3000/predict
+    url: ${PYTHON_SERVICE_URL:http://microservice-python:3000/predict}
 server:
   error:
     include-stacktrace: always
