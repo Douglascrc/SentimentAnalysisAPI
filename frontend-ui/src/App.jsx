@@ -64,7 +64,7 @@ const App = () => {
     // Acorda o Python ML (serviço de análise)
     fetch(`${API_URL}/health/warmup`).catch(() => {});
     
-    const interval = setInterval(fetchStats, 5000);
+    const interval = setInterval(fetchStats, 30000);
     return () => clearInterval(interval);
   }, []);
 
