@@ -8,6 +8,7 @@ import com.hackathon.sentiment.api.domain.repository.CommentRepository;
 import com.hackathon.sentiment.api.domain.repository.SentimentPredictionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +34,12 @@ public class SentimentService {
         Comment savedComment = commentRepository.save(newComment);
 
         try {
-
-            RestTemplate restTemplate = new RestTemplate();
+            // Configurar RestTemplate com timeout de 90 segundos para aguardar o ML acordar
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(90000); // 90 segundos
+            factory.setReadTimeout(90000);
+            RestTemplate restTemplate = new RestTemplate(factory);
+            
             SentimentRequest request = new SentimentRequest(text, language);
             SentimentResponse response = restTemplate.postForObject(pythonServiceUrl, request, SentimentResponse.class);
 

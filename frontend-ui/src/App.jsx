@@ -19,6 +19,7 @@ const App = () => {
   const [comment, setComment] = useState('');
   const [language, setLanguage] = useState('pt');
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Analisando...');
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
 
@@ -57,20 +58,40 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Aquecimento inicial - acorda o backend E o Python ML
+    // Aquecimento inicial - acorda o backend E o Python ML DIRETAMENTE
     fetchStats();
     fetchHistory();
     
-    // Acorda o Python ML (serviço de análise)
-    fetch(`${API_URL}/health/warmup`).catch(() => {});
+    // Acorda o Python ML DIRETO (navegador passa pelo Cloudflare)
+    fetch('https://sentimentanalysisapi-data.onrender.com/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'warmup', language: 'pt' })
+    }).catch(() => {});
     
-    const interval = setInterval(fetchStats, 30000);
-    return () => clearInterval(interval);
+    // Warmup periódico a cada 10 minutos
+    const warmupInterval = setInterval(() => {
+      fetch('https://sentimentanalysisapi-data.onrender.com/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: 'warmup', language: 'pt' })
+      }).catch(() => {});
+    }, 10 * 60 * 1000);
+    
+    const statsInterval = setInterval(fetchStats, 30000); // 30s conforme Douglas
+    
+    return () => {
+      clearInterval(statsInterval);
+      clearInterval(warmupInterval);
+    };
   }, []);
 
   const handleAnalyze = async () => {
     if (!comment.trim()) return;
+    
     setLoading(true);
+    setLoadingMessage('Analisando...');
+    
     try {
       const response = await fetch(`${API_URL}/sentiment`, {
         method: 'POST',
@@ -86,12 +107,15 @@ const App = () => {
         fetchHistory();
       } else {
         const errorData = await response.text();
-        console.error('Erro na requisição (Status ' + response.status + '):', errorData);
+        console.error('Erro na análise (Status ' + response.status + '):', errorData);
+        alert('Erro: ' + errorData);
       }
     } catch (error) {
-      console.error("Erro na análise");
+      console.error("Erro de conexão:", error);
+      alert('Erro de conexão. Backend pode estar dormindo. Aguarde 1 minuto e tente novamente.');
     } finally {
       setLoading(false);
+      setLoadingMessage('Analisando...');
     }
   };
 
@@ -249,9 +273,9 @@ const App = () => {
             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Analisando...' : 'Analisar Texto'}
+              {loading ? loadingMessage : 'Analisar Texto'}
             </button>
             {result && (
                 <div className={`mt-6 p-4 rounded-xl border animate-in fade-in slide-in-from-top-2 duration-300 ${
